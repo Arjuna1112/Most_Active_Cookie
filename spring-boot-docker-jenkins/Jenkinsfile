@@ -1,9 +1,13 @@
 pipeline{
     agent any
+    tools{
+        maven 'MAVEN'
+    }
     stages{
-        stage("build"){
+        stage("build maven"){
             steps{
-                echo 'building the application'
+                checkout([$class: 'GitSCM', branches: [[name: '*/main'], [name: '*/feature.*']], extensions: [], userRemoteConfigs: [[credentialsId: 'github_credentials', url: 'https://github.com/Arjuna1112/Spring_Boot.git']]])
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
             }
         }
         stage("test"){
